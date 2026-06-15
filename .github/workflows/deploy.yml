@@ -29,9 +29,6 @@ jobs:
           DEPLOY_PATH: ${{ secrets.DEPLOY_PATH }}
         run: |
           test -d public || { echo "public/ directory missing"; exit 1; }
-          DEPLOY_TARGET="${DEPLOY_PATH##*/sites/}"
-          DEPLOY_TARGET="${DEPLOY_TARGET#/}"
-          test -n "$DEPLOY_TARGET" || { echo "resolved deploy target is empty"; exit 1; }
-          rsync -az --delete --mkpath \
+          rsync -az --delete \
             -e "ssh -i ~/.ssh/id_ed25519 -o StrictHostKeyChecking=yes" \
-            public/ "$DEPLOY_USER@$DEPLOY_HOST:$DEPLOY_TARGET"
+            public/ "$DEPLOY_USER@$DEPLOY_HOST:$DEPLOY_PATH"
